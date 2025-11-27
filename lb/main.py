@@ -1,16 +1,30 @@
 from fastapi import FastAPI
 from lb.router import choose_best_server, mark_server_dead
 from lb.state import update_latency_values
+from lb.health import run_health_checks
+import asyncio
 import time
 import httpx
 
 app = FastAPI()
 
 
+# Periodic Background Check for servers
+@app.on_event("startup")
+async def start_health_loop():
+    asyncio.create_task(health_loop())
+
+
+async def health_loop():
+    while True:
+        await run_health_checks()
+        await asyncio.sleep(3)
+
+
 @app.get("/")
 async def load_balancer():
     """
-    Load Balancer Logic 
+    Load Balancer Logic
     """
 
     server = choose_best_server()

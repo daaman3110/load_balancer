@@ -8,7 +8,7 @@ async def check_server(server: dict):
     """
     try:
         async with httpx.AsyncClient(timeout=2.0) as client:
-            response = await client.head(server["url"])
+            response = await client.get(server["url"])
 
             if response.status_code == 200:
                 set_alive(server["url"])
