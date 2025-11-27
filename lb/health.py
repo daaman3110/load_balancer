@@ -21,7 +21,7 @@ async def check_server(server: dict):
 
 async def run_health_checks():
     """
-    Runs health checks for all servers
+    Runs health checks for all servers present
     """
     for server in servers:
         await check_server(server)
